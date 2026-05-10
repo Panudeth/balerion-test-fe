@@ -1,3 +1,4 @@
+import { Boxes } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
 
 export interface NavItem {
@@ -6,4 +7,6 @@ export interface NavItem {
   icon: LucideIcon
 }
 
-export const navItems: NavItem[] = []
+export const navItems: NavItem[] = [
+  { title: "Allocation", url: "/", icon: Boxes },
+]

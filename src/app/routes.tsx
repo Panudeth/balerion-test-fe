@@ -1,14 +1,18 @@
 import { Route, Routes } from "react-router-dom"
 import { AppLayout } from "@/components/layout/app-layout"
+import { AllocationPage } from "@/features/allocation"
 
 export function AppRoutes() {
   return (
     <Routes>
       <Route element={<AppLayout />}>
+        <Route index element={<AllocationPage />} />
         <Route
-          index
+          path="*"
           element={
-            <div className="p-6 text-muted-foreground">setting up...</div>
+            <div className="flex flex-1 items-center justify-center">
+              <p className="text-muted-foreground">Page not found</p>
+            </div>
           }
         />
       </Route>
