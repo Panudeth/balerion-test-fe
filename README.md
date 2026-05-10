@@ -190,18 +190,18 @@ flowchart LR
 
   Edit[edit Row A from 10 to 20]
   Edit --> Map
-  Map -. s.allocations.get X .-> Ax
-  Map -. s.allocations.get X .-> Ay
-  Map -. s.allocations.get X .-> Az
-  Map -. s.allocations.get Y .-> Bx
-  Map -. s.allocations.get Y .-> By
-  Map -. s.allocations.get Y .-> Bz
-  Map -. reduce all entries .-> Sc
+  Map -->|selector X| Ax
+  Map -->|selector X| Ay
+  Map -->|selector X| Az
+  Map -->|selector Y| Bx
+  Map -->|selector Y| By
+  Map -->|selector Y| Bz
+  Map -->|totals reducer| Sc
 
   Ax -->|new ref| RA[re-render]
   Ay -->|new ref| RA
   Az -->|new ref| RA
-  Bx -->|same ref| SB[Object.is true, skip]
+  Bx -->|same ref| SB[Object is true, skip]
   By -->|same ref| SB
   Bz -->|same ref| SB
   Sc -->|totals changed| RS[re-render stats]
