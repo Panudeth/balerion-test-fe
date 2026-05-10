@@ -1,73 +1,57 @@
-# React + TypeScript + Vite
+# Salmon Allocation
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+หน้า admin สำหรับจัดสรรปลาแซลมอนให้ order ตาม priority + stock + credit ของลูกค้า
 
-Currently, two official plugins are available:
+Live: https://spuict.web.app/
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Stack
 
-## React Compiler
+- Vite + React + TypeScript
+- Tailwind v4 + shadcn/ui
+- Zustand
+- TanStack Query
+- TanStack Table + TanStack Virtual
+- React Router v6
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## ที่ทำได้
 
-## Expanding the ESLint configuration
+- เปิดหน้าแล้ว auto allocate ให้เลย จัด Emergency ก่อน แล้ว Overdue แล้ว Daily
+- ใน type เดียวกันใช้ FIFO (order เก่ามาก่อน)
+- WH-000 / SP-000 = ใช้ที่ไหนก็ได้ เลือกตัวที่มี stock เหลือเยอะสุด
+- ราคา = base * tier (Emergency 125%, Overdue 100%, Daily 90%) ใช้ banker rounding 2 ตำแหน่ง
+- กดแก้ allocated เองได้ ถ้าใส่เกิน stock หรือ credit ระบบจะ clamp ให้
+- mock data 5,200 sub orders, table virtualized
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## รัน local
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Build + deploy
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+```
+npm run build
+firebase deploy --only hosting
+```
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## โครงสร้าง
+
+```
+src/
+  app/             providers, routes
+  components/
+    ui/            shadcn
+    layout/        sidebar, header
+    common/        data-table, page-header, stat-card
+  features/
+    allocation/
+      api/         mock data
+      lib/         banker round, auto allocate
+      hooks/       store + query
+      components/  cells, table, toolbar, stats
+  hooks/           use-theme, use-mobile
+  lib/             utils, format, query-client
+  stores/          ui store
 ```
